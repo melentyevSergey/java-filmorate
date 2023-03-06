@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -39,7 +38,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/users")
-    public User create(@Valid @RequestBody User user) {
+    public User create(@RequestBody User user) {
         // Создание нового пользователя
         log.info("Получен запрос POST для создания нового пользователя.");
 
@@ -63,7 +62,7 @@ public class UserController {
     }
 
     @PutMapping(value = "/users")
-    public User update(@Valid @RequestBody User user) {
+    public User update(@RequestBody User user) {
         // Обновление существующего пользователя
         log.info("Получен запрос PUT для обновления существующего пользователя.");
 

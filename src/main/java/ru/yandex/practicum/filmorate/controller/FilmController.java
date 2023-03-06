@@ -37,7 +37,7 @@ public class FilmController {
     }
 
     @PostMapping(value = "/films")
-    public Film create(@Valid @RequestBody Film film) {
+    public Film create(@RequestBody Film film) {
         // добавление фильма
         log.info("Получен запрос POST для создания нового фильма.");
 
@@ -57,7 +57,7 @@ public class FilmController {
     }
 
     @PutMapping(value = "/films")
-    public Film update(@Valid @RequestBody Film film) {
+    public Film update(@RequestBody Film film) {
         // обновление фильма
         log.info("Получен запрос PUT для обновления существующего фильма.");
 
