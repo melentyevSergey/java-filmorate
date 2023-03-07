@@ -7,13 +7,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.utils.IdUnknownException;
 import ru.yandex.practicum.filmorate.utils.ValidationException;
 import ru.yandex.practicum.filmorate.validators.ValidateUser;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @RestController
@@ -71,7 +69,7 @@ public class UserController {
             ValidateUser.validate(user);
             users.put(uid, user);
         } else {
-            throw new ValidationException("Нет пользователя с таким идентификатором.");
+            throw new IdUnknownException("Нет пользователя с таким идентификатором.");
         }
 
         log.debug("Обновлен пользователь: {}", user);

@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.utils.IdUnknownException;
 import ru.yandex.practicum.filmorate.utils.ValidationException;
 import ru.yandex.practicum.filmorate.validators.ValidateFilm;
 
@@ -66,7 +67,7 @@ public class FilmController {
             ValidateFilm.validate(film);
             films.put(uid, film);
         } else {
-            throw new ValidationException("Нет фильма с таким идентификатором.");
+            throw new IdUnknownException("Нет фильма с таким идентификатором.");
         }
 
         log.debug("Обновлен фильм: {}", film);
