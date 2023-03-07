@@ -148,7 +148,7 @@ class UserControllerTest {
         mockMvc.perform(put("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(validUser)))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().is5xxServerError());
     }
 
     @Test

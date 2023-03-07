@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.utils.IdUnknownException;
+import ru.yandex.practicum.filmorate.utils.IdValidationException;
 import ru.yandex.practicum.filmorate.utils.ValidationException;
 import ru.yandex.practicum.filmorate.validators.ValidateFilm;
 
@@ -67,7 +67,7 @@ public class FilmController {
             ValidateFilm.validate(film);
             films.put(uid, film);
         } else {
-            throw new IdUnknownException("Нет фильма с таким идентификатором.");
+            throw new IdValidationException("Нет фильма с таким идентификатором.");
         }
 
         log.debug("Обновлен фильм: {}", film);
@@ -77,6 +77,12 @@ public class FilmController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ValidationException.class)
     public String validationException(ValidationException exception) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(exception.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(IdValidationException.class)
+    public String idValidationException(IdValidationException exception) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(exception.getMessage());
     }
 

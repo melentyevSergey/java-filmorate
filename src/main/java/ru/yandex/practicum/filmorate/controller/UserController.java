@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.utils.IdUnknownException;
+import ru.yandex.practicum.filmorate.utils.IdValidationException;
 import ru.yandex.practicum.filmorate.utils.ValidationException;
 import ru.yandex.practicum.filmorate.validators.ValidateUser;
 
@@ -69,7 +69,7 @@ public class UserController {
             ValidateUser.validate(user);
             users.put(uid, user);
         } else {
-            throw new IdUnknownException("Нет пользователя с таким идентификатором.");
+            throw new IdValidationException("Нет пользователя с таким идентификатором.");
         }
 
         log.debug("Обновлен пользователь: {}", user);
@@ -79,6 +79,12 @@ public class UserController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ValidationException.class)
     public String validationException(ValidationException exception) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(exception.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(IdValidationException.class)
+    public String idValidationException(IdValidationException exception) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(exception.getMessage());
     }
 
