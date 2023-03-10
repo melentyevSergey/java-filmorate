@@ -43,12 +43,6 @@ public class FilmController {
 
         ValidateFilm.validate(film);
 
-        if (films.containsKey(film.getId())) {
-            log.debug("Фильм с таким идентификатором уже существует.");
-            throw new ValidationException("Фильм с идентификатором " + film.getId() +
-                    " уже существует.");
-        }
-
         film.setId(++uid);
         films.put(uid, film);
 

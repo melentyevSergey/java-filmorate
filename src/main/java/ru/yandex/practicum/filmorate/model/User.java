@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NonNull;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
@@ -27,7 +28,7 @@ public class User {
     private String email;
 
     /** Поле с логином пользователя */
-    @NotNull
+    @NotBlank
     private String login;
 
     /** Поле с именем пользователя */

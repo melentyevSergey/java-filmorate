@@ -2,6 +2,10 @@ package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 /**
@@ -19,9 +23,11 @@ public class Film {
     private int id;
 
     /** Поле с наименованием фильма */
+    @NotBlank
     private String name;
 
     /** Поле с описанием фильма */
+    @Size(min = 1, max = 200)
     private String description;
 
     /** Поле с датой релиза фильма */
@@ -29,5 +35,6 @@ public class Film {
     private LocalDate releaseDate;
 
     /** Поле с продолжительностью фильма */
+    @Min(1)
     private long duration;
 }

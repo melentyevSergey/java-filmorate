@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 import static java.time.Month.DECEMBER;
 
-public abstract class ValidateFilm {
+public class ValidateFilm {
 
     /** Поле с константой максимальной длины описания */
     private final static long MAX_DESCRIPTION_LENGTH = 200;

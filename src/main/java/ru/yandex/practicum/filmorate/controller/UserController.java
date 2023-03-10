@@ -42,12 +42,6 @@ public class UserController {
 
         ValidateUser.validate(user);
 
-        if (users.containsKey(user.getId())) {
-            log.debug("Пользователь с таким идентификатором уже существует.");
-            throw new ValidationException("Пользователь с идентификатором " + user.getId() +
-                    " уже существует.");
-        }
-
         if ((user.getName() == null) || (user.getName().isBlank())) {
             user.setName(user.getLogin());
         }

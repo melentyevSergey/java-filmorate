@@ -67,18 +67,6 @@ class FilmControllerTest {
     }
 
     @Test
-    void shouldBeCreateExceptionWithExistentId() throws Exception {
-        mockMvc.perform(post("/films")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(validFilm)));
-        validFilm.setId(1);
-        mockMvc.perform(post("/films")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(validFilm)))
-                .andExpect(status().is4xxClientError());
-    }
-
-    @Test
     void shouldBeNameException() throws Exception {
         invalidFilm = validFilm.toBuilder()
                 .name("")

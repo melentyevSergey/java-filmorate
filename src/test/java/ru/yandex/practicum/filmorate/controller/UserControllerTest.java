@@ -69,18 +69,6 @@ class UserControllerTest {
     }
 
     @Test
-    void shouldBeCreateExceptionWithExistentId() throws Exception {
-        mockMvc.perform(post("/users")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(validUser)));
-        validUser.setId(1);
-        mockMvc.perform(post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(validUser)))
-                .andExpect(status().is4xxClientError());
-    }
-
-    @Test
     void shouldBeLoginException() throws Exception {
         invalidUser = validUser.toBuilder()
                 .login("new login")
