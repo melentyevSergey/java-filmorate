@@ -1,10 +1,13 @@
 package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NonNull;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
@@ -13,10 +16,10 @@ import java.time.LocalDate;
  * @author Мелентьев Сергей
  * @version 1.0
  */
-@lombok.Data
-@lombok.Builder(toBuilder = true)
-@lombok.AllArgsConstructor
-@lombok.NonNull
+@Data
+@Builder(toBuilder = true)
+@AllArgsConstructor
+@NonNull
 public class Film {
 
     /** Поле с идентификатором фильма */

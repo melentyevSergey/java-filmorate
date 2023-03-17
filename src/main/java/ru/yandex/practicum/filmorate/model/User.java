@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 
@@ -17,7 +18,7 @@ import java.time.LocalDate;
  * @version 1.0
  */
 @Data
-@lombok.Builder(toBuilder = true)
+@Builder(toBuilder = true)
 public class User {
 
     /** Поле с идентификатором пользователя */
