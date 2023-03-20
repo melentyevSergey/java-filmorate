@@ -2,72 +2,48 @@ package ru.yandex.practicum.filmorate.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.utils.IdValidationException;
 import ru.yandex.practicum.filmorate.utils.ValidationException;
-import ru.yandex.practicum.filmorate.validators.ValidateUser;
 
-import java.util.*;
+import java.util.List;
 
 
+@Slf4j
 @RestController
 public class UserController {
 
-    /** Поле со статическим экземпляром логгера */
-    private final static Logger log = LoggerFactory.getLogger(UserController.class);
+    private final UserService service;
 
-    /** Поле с таблицей уникальный идентификатор и пользователь */
-    private final Map<Integer, User> users = new HashMap<>();
-
-    /** Поле с последним свободным уникальным идентификатором */
-    private int uid = 0;
+    @Autowired
+    public UserController(UserService service) {
+        this.service = service;
+    }
 
     @GetMapping("/users")
     public List<User> getUsers() {
-        // Получение списка всех пользователей
-
         log.info("Получен запрос GET на получение списка всех пользователей.");
-        log.debug("Текущее количество пользователей: {}", users.values().size());
-        return new ArrayList<>(users.values());
+
+        return service.getUsers();
     }
 
     @PostMapping(value = "/users")
     public User create(@RequestBody User user) {
-        // Создание нового пользователя
         log.info("Получен запрос POST для создания нового пользователя.");
 
-        ValidateUser.validate(user);
-
-        if ((user.getName() == null) || (user.getName().isBlank())) {
-            user.setName(user.getLogin());
-        }
-
-        user.setId(++uid);
-        users.put(uid, user);
-
-        log.debug("Создан новый пользователь: {}", user);
-        return user;
+        return service.createUser(user);
     }
 
     @PutMapping(value = "/users")
     public User update(@RequestBody User user) {
-        // Обновление существующего пользователя
         log.info("Получен запрос PUT для обновления существующего пользователя.");
 
-        int receivedUserId = user.getId();
-        if (users.containsKey(receivedUserId)) {
-            ValidateUser.validate(user);
-            users.put(uid, user);
-        } else {
-            throw new IdValidationException("Нет пользователя с таким идентификатором.");
-        }
-
-        log.debug("Обновлен пользователь: {}", user);
-        return user;
+        return service.updateUser(user);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -80,10 +56,5 @@ public class UserController {
     @ExceptionHandler(IdValidationException.class)
     public String idValidationException(IdValidationException exception) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(exception.getMessage());
-    }
-
-    public void clearUsers() {
-        uid = 0;
-        users.clear();
     }
 }

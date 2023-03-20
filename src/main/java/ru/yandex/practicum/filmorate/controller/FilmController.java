@@ -17,12 +17,17 @@ import java.util.*;
 @RestController
 public class FilmController {
 
+    private final FilmService service;
+
     @Autowired
-    private FilmService service;
+    public FilmController(FilmService service) {
+        this.service = service;
+    }
 
     @GetMapping("/films")
     public List<Film> getFilms() {
         log.info("Получен запрос GET на получение списка всех фильмов.");
+
         return service.getFilms();
     }
 

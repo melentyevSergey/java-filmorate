@@ -1,10 +1,7 @@
-package ru.yandex.practicum.filmorate.repository;
+package ru.yandex.practicum.filmorate.storage;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.ArrayList;
@@ -14,7 +11,7 @@ import java.util.Map;
 
 @Slf4j
 @Repository
-public class FilmRepository {
+public class InMemoryFilmStorage implements FilmStorage {
 
     /** Поле с последним свободным уникальным идентификатором */
     private int uid = 0;
@@ -22,12 +19,24 @@ public class FilmRepository {
     /** Поле с таблицей уникальный идентификатор и фильм */
     private final Map<Integer, Film> films = new HashMap<>();
 
+    public boolean isFilmPresent(int id) {
+        return films.containsKey(id);
+    }
+
+    public void resetFilmStorage() {
+        uid = 0;
+        films.clear();
+    }
+
+    @Override
     public List<Film> getFilms() {
         log.debug("Текущее количество фильмов: {}", films.values().size());
+
         return new ArrayList<>(films.values());
     }
 
-    public Film create(Film film) {
+    @Override
+    public Film createFilm(Film film) {
         film.setId(++uid);
         films.put(uid, film);
 
@@ -36,7 +45,8 @@ public class FilmRepository {
         return film;
     }
 
-    public Film update(Film film) {
+    @Override
+    public Film updateFilm(Film film) {
         films.put(film.getId(), film);
 
         log.debug("Обновлен фильм с идентификатором: {}", film.getId());
@@ -44,12 +54,8 @@ public class FilmRepository {
         return film;
     }
 
-    public boolean isFilmPresent(int id) {
-        return films.containsKey(id);
-    }
-
-    public void resetRepository() {
-        uid = 0;
-        films.clear();
+    @Override
+    public void removeFilm(int id) {
+        // TODO removeFilm(int id)
     }
 }
