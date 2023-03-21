@@ -32,18 +32,59 @@ public class UserController {
         return service.getUsers();
     }
 
-    @PostMapping(value = "/users")
+    @PostMapping("/users")
     public User create(@RequestBody User user) {
         log.info("Получен запрос POST для создания нового пользователя.");
 
         return service.createUser(user);
     }
 
-    @PutMapping(value = "/users")
+    @PutMapping("/users")
     public User update(@RequestBody User user) {
         log.info("Получен запрос PUT для обновления существующего пользователя.");
 
         return service.updateUser(user);
+    }
+
+    @ResponseBody
+    @GetMapping("/users/{id}")
+    public User getUserById(@PathVariable int id) {
+        log.info("Получен запрос GET для получения пользователя по идентификатору {}", id);
+
+        return service.getUserById(id);
+    }
+
+    @ResponseBody
+    @PutMapping("/users/{id}/friends/{friendId}")
+    public User updateUserWithFriend(@PathVariable int id, @PathVariable int friendId) {
+        log.info("Получен запрос PUT для добавления пользователю {} друга {}", id, friendId);
+
+        return service.addFriend(id, friendId);
+    }
+
+    @ResponseBody
+    @DeleteMapping("/users/{id}/friends/{friendId}")
+    public User deleteFriendFromUser(@PathVariable int id, @PathVariable int friendId) {
+        log.info("Получен запрос DELETE для удаления друга {} у пользователя {}", friendId, id);
+
+        return service.removeFriend(id, friendId);
+    }
+
+    @ResponseBody
+    @GetMapping("/users/{id}/friends")
+    public List<Integer> getFriendsByUserId(@PathVariable int id) {
+        log.info("Получен запрос GET для получения друзей пользователя {}", id);
+
+        return service.getFriends(id);
+    }
+
+    @ResponseBody
+    @GetMapping("/users/{id}/friends/common/{otherId}")
+    public List<Integer> getFriendsByUserId(@PathVariable int id, @PathVariable int otherId) {
+        log.info("Получен запрос GET для получения списка друзей пользователя {}, " +
+                "общих с пользователем {}", id, otherId);
+
+        return service.getCommonFriends(id, otherId);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

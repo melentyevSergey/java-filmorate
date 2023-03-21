@@ -46,6 +46,11 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
+    public User getUserById(int id) {
+        return users.get(id);
+    }
+
+    @Override
     public User updateUser(User user) {
         users.put(uid, user);
 
@@ -62,26 +67,49 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public void addFriend(User user, int friendId) {
+    public User addFriend(int id, int friendId) {
+        User user = users.get(id);
         user.addFriend(friendId);
 
-        log.debug("Добавлен друг с id {} у пользователя с id {}", user.getId(), friendId);
+        users.put(id, user);
+
+        log.debug("Пользователю {} добавлен друг {}", id, friendId);
+
+        return user;
     }
 
     @Override
-    public void removeFriend(User user, int removeId) {
+    public User removeFriend(int id, int removeId) {
+        User user = users.get(id);
         user.removeFriend(removeId);
 
-        log.debug("Удален друг с id {} у пользователя с id {}", user.getId(), removeId);
+        users.put(id, user);
+
+        log.debug("Удален друг {} у пользователя {}", removeId, id);
+
+        return user;
     }
 
     @Override
-    public List<Integer> getFriends(User user) {
+    public List<Integer> getFriends(int id) {
+        User user = users.get(id);
         List<Integer> friends = new ArrayList<>(user.getFriends());
 
         log.debug("Будет возвращен список друзей из {} записей", friends.size());
 
         return friends;
+    }
+
+    @Override
+    public List<Integer> getCommonFriends(int id, int otherId) {
+        User user = users.get(id);
+        User otherUser = users.get(otherId);
+
+        List<Integer> userFriends = new ArrayList<>(user.getFriends());
+        List<Integer> common = new ArrayList<>(otherUser.getFriends());
+        common.retainAll(userFriends);
+
+        return common;
     }
 
     public void resetUserStorage() {

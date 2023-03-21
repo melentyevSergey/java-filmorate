@@ -34,6 +34,16 @@ public class UserService {
         return userStorage.createUser(user);
     }
 
+    public User getUserById(int id) {
+        if (id > 0 && userStorage.isUserPresent(id)) {
+            log.debug("Валидация запроса завершена успешно.");
+
+            return userStorage.getUserById(id);
+        } else {
+            throw new IdValidationException("Не корректный идентификатор пользователя.");
+        }
+    }
+
     public User updateUser(User user) {
         int receivedUserId = user.getId();
         if (userStorage.isUserPresent(receivedUserId)) {
@@ -47,15 +57,36 @@ public class UserService {
         }
     }
 
-    public void addFriend(User user, int friendId) {
-        userStorage.addFriend(user, friendId);
+    public User addFriend(int id, int friendId) {
+        if (userStorage.isUserPresent(id) && userStorage.isUserPresent(friendId)) {
+            return userStorage.addFriend(id, friendId);
+        } else {
+            throw new IdValidationException("Нет пользователя с таким идентификатором");
+        }
     }
 
-    public void removeFriend(User user, int removeId) {
-        userStorage.removeFriend(user, removeId);
+    public User removeFriend(int id, int removeId) {
+        if (userStorage.isUserPresent(id) && userStorage.isUserPresent(removeId)) {
+            return userStorage.removeFriend(id, removeId);
+        } else {
+            throw new IdValidationException("Нет пользователя с таким идентификатором");
+        }
     }
 
-    public List<Integer> getFriends(User user) {
-        return userStorage.getFriends(user);
+    public List<Integer> getFriends(int id) {
+        if (userStorage.isUserPresent(id)) {
+            return userStorage.getFriends(id);
+        } else {
+            throw new IdValidationException("Нет пользователя с таким идентификатором");
+        }
+
+    }
+
+    public List<Integer> getCommonFriends(int id, int otherId) {
+        if (userStorage.isUserPresent(id) && userStorage.isUserPresent(otherId)) {
+            return userStorage.getCommonFriends(id, otherId);
+        } else {
+            throw new IdValidationException("Нет пользователя с таким идентификатором");
+        }
     }
 }
