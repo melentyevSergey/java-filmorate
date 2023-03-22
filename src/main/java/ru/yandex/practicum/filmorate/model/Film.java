@@ -10,6 +10,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Класс фильм
@@ -17,9 +19,9 @@ import java.time.LocalDate;
  * @version 1.0
  */
 @Data
+@NonNull
 @Builder(toBuilder = true)
 @AllArgsConstructor
-@NonNull
 public class Film {
 
     /** Поле с идентификатором фильма */
@@ -40,4 +42,27 @@ public class Film {
     /** Поле с продолжительностью фильма */
     @Min(1)
     private long duration;
+
+    /** Поле с уникальными идентификаторами пользователей, поставивших лайк под фильмом */
+    private final Set<Integer> likes = new HashSet<>();
+
+    /**
+     * Метод для добавления лайка фильму
+     * @param id - идентификатор пользователя
+     */
+    public void addLike(int id) {
+        likes.add(id);
+    }
+
+    /**
+     * Метод для удаления лайка у фильма
+     * @param id - идентификатор пользователя
+     */
+    public void removeLike(int id) {
+        likes.remove(id);
+    }
+
+    public int getLikesCount() {
+        return likes.size();
+    }
 }

@@ -1,17 +1,14 @@
 package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NonNull;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
-
 
 /**
  * Класс пользователь
@@ -19,6 +16,7 @@ import java.util.Set;
  * @version 1.0
  */
 @Data
+@AllArgsConstructor
 @Builder(toBuilder = true)
 public class User {
 
@@ -42,25 +40,20 @@ public class User {
     private final LocalDate birthday;
 
     /** Поле со списком друзей */
-    private Set<Integer> friends;
+    private final Set<Integer> friends = new HashSet<>();
 
-    public User(int id, @NonNull String email, @NonNull String login, String name,
-                @PastOrPresent LocalDate birthday, Set<Integer> friends) {
-        if ((name == null) || (name.isBlank())) {
-            name = login;
-        }
-        this.id = id;
-        this.email = email;
-        this.login = login;
-        this.name = name;
-        this.birthday = birthday;
-        this.friends = friends;
-    }
-
+    /**
+     * Метод для добавления друга
+     * @param id - идентификатор пользователя
+     */
     public void addFriend(int id) {
         friends.add(id);
     }
 
+    /**
+     * Метод для удаления друга
+     * @param id - идентификатор пользователя
+     */
     public void removeFriend(int id) {
         friends.remove(id);
     }

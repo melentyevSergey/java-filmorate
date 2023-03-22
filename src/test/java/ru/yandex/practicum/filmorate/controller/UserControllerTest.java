@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.time.LocalDate;
 
@@ -24,7 +25,7 @@ class UserControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
-    private UserController userController;
+    private InMemoryUserStorage userStorage;
     @Autowired
     private MockMvc mockMvc;
     private User validUser;
@@ -44,7 +45,7 @@ class UserControllerTest {
     @AfterEach
     void clearRepository() {
         validUser.setId(0);
-        userController.clearUsers();
+        userStorage.resetUserStorage();
     }
 
     @Test

@@ -33,13 +33,13 @@ public interface UserStorage {
 
     boolean isUserPresent(int receivedUserId);
 
-    User addFriend(int id, int friendId);
+    void addFriend(int id, int friendId);
 
-    User removeFriend(int id, int removeId);
+    void removeFriend(int id, int removeId);
 
-    List<Integer> getFriends(int id);
+    List<User> getFriends(int id);
 
     User getUserById(int id);
 
-    List<Integer> getCommonFriends(int id, int otherId);
+    List<User> getCommonFriends(int id, int otherId);
 }

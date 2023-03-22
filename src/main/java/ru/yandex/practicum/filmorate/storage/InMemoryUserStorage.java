@@ -67,33 +67,41 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User addFriend(int id, int friendId) {
+    public void addFriend(int id, int friendId) {
         User user = users.get(id);
+        User friend = users.get(friendId);
+
         user.addFriend(friendId);
+        friend.addFriend(id);
 
         users.put(id, user);
+        users.put(friendId, friend);
 
         log.debug("Пользователю {} добавлен друг {}", id, friendId);
-
-        return user;
     }
 
     @Override
-    public User removeFriend(int id, int removeId) {
+    public void removeFriend(int id, int removeId) {
         User user = users.get(id);
+        User friend = users.get(removeId);
+
         user.removeFriend(removeId);
+        friend.removeFriend(id);
 
         users.put(id, user);
+        users.put(removeId, friend);
 
         log.debug("Удален друг {} у пользователя {}", removeId, id);
-
-        return user;
     }
 
     @Override
-    public List<Integer> getFriends(int id) {
+    public List<User> getFriends(int id) {
         User user = users.get(id);
-        List<Integer> friends = new ArrayList<>(user.getFriends());
+        List<User> friends = new ArrayList<>();
+
+        for (int friendId : user.getFriends()) {
+            friends.add(users.get(friendId));
+        }
 
         log.debug("Будет возвращен список друзей из {} записей", friends.size());
 
@@ -101,7 +109,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public List<Integer> getCommonFriends(int id, int otherId) {
+    public List<User> getCommonFriends(int id, int otherId) {
         User user = users.get(id);
         User otherUser = users.get(otherId);
 
@@ -109,7 +117,13 @@ public class InMemoryUserStorage implements UserStorage {
         List<Integer> common = new ArrayList<>(otherUser.getFriends());
         common.retainAll(userFriends);
 
-        return common;
+        List<User> commonFriends = new ArrayList<>();
+
+        for (int commonId : common) {
+            commonFriends.add(users.get(commonId));
+        }
+
+        return commonFriends;
     }
 
     public void resetUserStorage() {

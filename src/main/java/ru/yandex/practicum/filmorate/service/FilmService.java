@@ -5,8 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.utils.IdValidationException;
+import ru.yandex.practicum.filmorate.utils.NotFoundException;
 import ru.yandex.practicum.filmorate.validators.ValidateFilm;
 
 @Slf4j
@@ -43,6 +45,37 @@ public class FilmService {
             return filmStorage.updateFilm(film);
         } else {
             throw new IdValidationException("Нет фильма с таким идентификатором.");
+        }
+    }
+
+    public Film addLike(int id, int userId) {
+        if (filmStorage.isFilmPresent(id)) {
+            return filmStorage.addLike(id, userId);
+        } else {
+            throw new IdValidationException("Нет фильма с таким идентификатором.");
+        }
+    }
+
+    public Film removeLike(int id, int userId) {
+        if (userId <= 0) {
+            throw new NotFoundException("Пользователь не найден.");
+        }
+        if (filmStorage.isFilmPresent(id)) {
+            return filmStorage.removeLike(id, userId);
+        } else {
+            throw new IdValidationException("Нет фильма с таким идентификатором.");
+        }
+    }
+
+    public List<Film> getPopularByCount(int count) {
+        return filmStorage.getPopularByCount(count);
+    }
+
+    public Film getFilmById(int id) {
+        if (filmStorage.isFilmPresent(id)) {
+            return filmStorage.getFilmById(id);
+        } else {
+            throw new NotFoundException("Нет фильма с таким идентификатором.");
         }
     }
 }
