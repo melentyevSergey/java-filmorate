@@ -49,6 +49,9 @@ public class FilmService {
     }
 
     public Film addLike(int id, int userId) {
+        if (userId <= 0) {
+            throw new NotFoundException("Пользователь не найден.");
+        }
         if (filmStorage.isFilmPresent(id)) {
             return filmStorage.addLike(id, userId);
         } else {
