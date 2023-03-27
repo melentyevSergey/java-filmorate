@@ -95,7 +95,7 @@ class FilmControllerTest {
     @Test
     void shouldBeReleaseDateExceptionAfter1895_12_28() throws Exception {
         invalidFilm = validFilm.toBuilder()
-                .releaseDate(LocalDate.of(1888, 12 , 28))
+                .releaseDate(LocalDate.of(1888, 12, 28))
                 .build();
         mockMvc.perform(post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -117,7 +117,7 @@ class FilmControllerTest {
     @Test
     void shouldBeCreatedWithReleaseDate1895_12_28() throws Exception {
         invalidFilm = validFilm.toBuilder()
-                .releaseDate(LocalDate.of(1895, 12 , 28))
+                .releaseDate(LocalDate.of(1895, 12, 28))
                 .build();
         mockMvc.perform(post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -128,7 +128,7 @@ class FilmControllerTest {
     @Test
     void shouldBeCreatedWithReleaseDate1998_09_01() throws Exception {
         invalidFilm = validFilm.toBuilder()
-                .releaseDate(LocalDate.of(1998, 9 , 1))
+                .releaseDate(LocalDate.of(1998, 9, 1))
                 .build();
         mockMvc.perform(post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
