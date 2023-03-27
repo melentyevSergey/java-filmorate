@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,14 +12,11 @@ import java.util.List;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 public class UserController {
 
-    private final UserService service;
-
     @Autowired
-    public UserController(UserService service) {
-        this.service = service;
-    }
+    private final UserService service;
 
     @GetMapping("/users")
     public List<User> getUsers() {
@@ -73,9 +71,8 @@ public class UserController {
 
     @ResponseBody
     @GetMapping("/users/{id}/friends/common/{otherId}")
-    public List<User> getFriendsByUserId(@PathVariable int id, @PathVariable int otherId) {
-        log.info("Получен запрос GET для получения списка друзей пользователя {}, " +
-                "общих с пользователем {}", id, otherId);
+    public List<User> getCommonFriends(@PathVariable int id, @PathVariable int otherId) {
+        log.info("Получен запрос GET для получения общего списка друзей у пользователя {}", id);
 
         return service.getCommonFriends(id, otherId);
     }
