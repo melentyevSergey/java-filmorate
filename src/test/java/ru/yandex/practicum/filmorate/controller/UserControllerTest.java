@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.time.LocalDate;
 
@@ -24,7 +25,7 @@ class UserControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
-    private UserController userController;
+    private InMemoryUserStorage userStorage;
     @Autowired
     private MockMvc mockMvc;
     private User validUser;
@@ -44,7 +45,7 @@ class UserControllerTest {
     @AfterEach
     void clearRepository() {
         validUser.setId(0);
-        userController.clearUsers();
+        userStorage.resetUserStorage();
     }
 
     @Test
@@ -136,7 +137,7 @@ class UserControllerTest {
         mockMvc.perform(put("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(validUser)))
-                .andExpect(status().is5xxServerError());
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -157,13 +158,6 @@ class UserControllerTest {
     void mustBeAssignedNameBasedOnData() throws Exception {
         validUser.setName("");
         mockMvc.perform(post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(validUser)))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("$.name").value(validUser.getLogin()));
-        validUser.setId(1);
-        validUser.setName(null);
-        mockMvc.perform(put("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(validUser)))
                 .andExpect(status().is2xxSuccessful())

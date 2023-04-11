@@ -1,87 +1,77 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.utils.IdValidationException;
-import ru.yandex.practicum.filmorate.utils.ValidationException;
-import ru.yandex.practicum.filmorate.validators.ValidateFilm;
+import ru.yandex.practicum.filmorate.service.FilmService;
 
 import java.util.*;
 
-
+@Slf4j
 @RestController
+@RequiredArgsConstructor
 public class FilmController {
 
-    /** Поле со статическим экземпляром логгера */
-    private final static Logger log = LoggerFactory.getLogger(FilmController.class);
+    @Autowired
+    private final FilmService service;
 
-    /** Поле с таблицей уникальный идентификатор и фильм */
-    private final Map<Integer, Film> films = new HashMap<>();
-
-    /** Поле с последним свободным уникальным идентификатором */
-    private int uid = 0;
-
+    @ResponseBody
     @GetMapping("/films")
     public List<Film> getFilms() {
-        // получение всех фильмов
-        // Обработка GET-запроса по пути "/api/v1/film"
-
         log.info("Получен запрос GET на получение списка всех фильмов.");
-        log.debug("Текущее количество фильмов: {}", films.values().size());
-        return new ArrayList<>(films.values());
+
+        return service.getFilms();
     }
 
-    @PostMapping(value = "/films")
+    @ResponseBody
+    @GetMapping("/films/{id}")
+    public Film getFilmById(@PathVariable int id) {
+        log.info("Получен запрос GET для получения фильма по идентификатору {}", id);
+
+        return service.getFilmById(id);
+    }
+
+    @ResponseBody
+    @PostMapping("/films")
     public Film create(@RequestBody Film film) {
-        // добавление фильма
         log.info("Получен запрос POST для создания нового фильма.");
 
-        ValidateFilm.validate(film);
-
-        film.setId(++uid);
-        films.put(uid, film);
-
-        log.debug("Создан новый фильм: {}", film);
-        return film;
+        return service.createNewFilm(film);
     }
 
-    @PutMapping(value = "/films")
+    @ResponseBody
+    @PutMapping("/films")
     public Film update(@RequestBody Film film) {
-        // обновление фильма
         log.info("Получен запрос PUT для обновления существующего фильма.");
 
-        int receivedFilmId = film.getId();
-
-        if (films.containsKey(receivedFilmId)) {
-            ValidateFilm.validate(film);
-            films.put(uid, film);
-        } else {
-            throw new IdValidationException("Нет фильма с таким идентификатором.");
-        }
-
-        log.debug("Обновлен фильм: {}", film);
-        return film;
+        return service.updateFilm(film);
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(ValidationException.class)
-    public String validationException(ValidationException exception) throws JsonProcessingException {
-        return new ObjectMapper().writeValueAsString(exception.getMessage());
+    @ResponseBody
+    @PutMapping("/films/{id}/like/{userId}")
+    public Film addUserLike(@PathVariable int id, @PathVariable int userId) {
+        log.info("Получен запрос PUT для добавления лайка фильму {} пользователем {}", id, userId);
+
+        return service.addLike(id, userId);
     }
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(IdValidationException.class)
-    public String idValidationException(IdValidationException exception) throws JsonProcessingException {
-        return new ObjectMapper().writeValueAsString(exception.getMessage());
+    @ResponseBody
+    @DeleteMapping("/films/{id}/like/{userId}")
+    public Film deleteUserLike(@PathVariable int id, @PathVariable int userId) {
+        log.info("Получен запрос DELETE для удаления лайка " +
+                "пользователя {} под фильмом {}", userId, id);
+
+        return service.removeLike(id, userId);
     }
 
-    public void clearFilms() {
-        uid = 0;
-        films.clear();
+    @ResponseBody
+    @GetMapping("/films/popular")
+    public List<Film> getPopularByCount(@RequestParam(defaultValue = "10") int count) {
+        log.info("Получен запрос GET для возврата списка из первых {} фильмов " +
+                "по количеству лайков", count);
+
+        return service.getPopularByCount(count);
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 
 import java.time.LocalDate;
 
@@ -24,7 +25,7 @@ class FilmControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
-    private FilmController filmController;
+    private InMemoryFilmStorage filmStorage;
     @Autowired
     private MockMvc mockMvc;
     private Film validFilm;
@@ -42,7 +43,7 @@ class FilmControllerTest {
 
     @AfterEach
     void clearRepository() {
-        filmController.clearFilms();
+        filmStorage.resetFilmStorage();
     }
 
     @Test
@@ -94,7 +95,7 @@ class FilmControllerTest {
     @Test
     void shouldBeReleaseDateExceptionAfter1895_12_28() throws Exception {
         invalidFilm = validFilm.toBuilder()
-                .releaseDate(LocalDate.of(1888, 12 , 28))
+                .releaseDate(LocalDate.of(1888, 12, 28))
                 .build();
         mockMvc.perform(post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -116,7 +117,7 @@ class FilmControllerTest {
     @Test
     void shouldBeCreatedWithReleaseDate1895_12_28() throws Exception {
         invalidFilm = validFilm.toBuilder()
-                .releaseDate(LocalDate.of(1895, 12 , 28))
+                .releaseDate(LocalDate.of(1895, 12, 28))
                 .build();
         mockMvc.perform(post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -127,7 +128,7 @@ class FilmControllerTest {
     @Test
     void shouldBeCreatedWithReleaseDate1998_09_01() throws Exception {
         invalidFilm = validFilm.toBuilder()
-                .releaseDate(LocalDate.of(1998, 9 , 1))
+                .releaseDate(LocalDate.of(1998, 9, 1))
                 .build();
         mockMvc.perform(post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
