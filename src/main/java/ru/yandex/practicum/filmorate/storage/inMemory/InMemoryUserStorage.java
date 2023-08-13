@@ -1,8 +1,9 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.inMemory;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +21,7 @@ public class InMemoryUserStorage implements UserStorage {
     private final Map<Integer, User> users = new HashMap<>();
 
     @Override
-    public boolean isUserPresent(int id) {
+    public boolean isUserPresent(Integer id) {
         return users.containsKey(id);
     }
 
@@ -46,7 +47,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User getUserById(int id) {
+    public User getUserById(Integer id) {
         return users.get(id);
     }
 
@@ -60,14 +61,14 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public void removeUser(int id) {
+    public void removeUser(Integer id) {
         users.remove(id);
 
         log.debug("Удален пользователь с идентификатором: {}", id);
     }
 
     @Override
-    public void addFriend(int id, int friendId) {
+    public void addFriend(Integer id, Integer friendId) {
         User user = users.get(id);
         User friend = users.get(friendId);
 
@@ -81,7 +82,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public void removeFriend(int id, int removeId) {
+    public void removeFriend(Integer id, Integer removeId) {
         User user = users.get(id);
         User friend = users.get(removeId);
 
@@ -95,7 +96,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public List<User> getFriends(int id) {
+    public List<User> getFriends(Integer id) {
         User user = users.get(id);
         List<User> friends = new ArrayList<>();
 
@@ -109,7 +110,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public List<User> getCommonFriends(int id, int otherId) {
+    public List<User> getCommonFriends(Integer id, Integer otherId) {
         User user = users.get(id);
         User otherUser = users.get(otherId);
 
