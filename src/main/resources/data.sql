@@ -1,12 +1,16 @@
-INSERT INTO FILMORATE.PUBLIC."genre" ("name") VALUES ('Комедия');
-INSERT INTO FILMORATE.PUBLIC."genre" ("name") VALUES ('Драма');
-INSERT INTO FILMORATE.PUBLIC."genre" ("name") VALUES ('Мультфильм');
-INSERT INTO FILMORATE.PUBLIC."genre" ("name") VALUES ('Триллер');
-INSERT INTO FILMORATE.PUBLIC."genre" ("name") VALUES ('Документальный');
-INSERT INTO FILMORATE.PUBLIC."genre" ("name") VALUES ('Боевик');
+MERGE INTO GENRE (genre_id, genre_name)
+    VALUES (1, 'Боевик'),
+           (2, 'Документальный'),
+           (3, 'Триллер');
 
-INSERT INTO FILMORATE.PUBLIC."mpa" ("RATING", "DESCRIPTION") VALUES ('G', 'у фильма нет возрастных ограничений');
-INSERT INTO FILMORATE.PUBLIC."mpa" ("RATING", "DESCRIPTION") VALUES ('PG', 'детям рекомендуется смотреть фильм с родителями');
-INSERT INTO FILMORATE.PUBLIC."mpa" ("RATING", "DESCRIPTION") VALUES ('PG-13', 'детям до 13 лет просмотр не желателен');
-INSERT INTO FILMORATE.PUBLIC."mpa" ("RATING", "DESCRIPTION") VALUES ('R', 'лицам до 17 лет просматривать фильм можно только в присутствии взрослого');
-INSERT INTO FILMORATE.PUBLIC."mpa" ("RATING", "DESCRIPTION") VALUES ('NC-17', 'лицам до 18 лет просмотр запрещён');
+MERGE INTO MPA (mpa_id, mpa_name)
+    VALUES (1, 'GG'),
+           (2, 'PPG'),
+           (3, 'PPG-13');
+
+MERGE INTO USERS (user_id, name, email, login, birthday)
+    VALUES (1, 'Name_1', 'mail_1@mail.ru', 'Login_1', '2023-08-23'),
+           (2, 'Name_2', 'mail_2@mail.ru', 'Login_2', '2023-08-24');
+
+INSERT INTO FRIENDS (friend_one_id, friend_two_id, status)
+VALUES (1, 2, TRUE);
