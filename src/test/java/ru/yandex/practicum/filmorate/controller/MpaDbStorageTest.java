@@ -21,12 +21,12 @@ class MpaDbStorageTest {
     @Test
     void shouldGetAll() {
         List<Mpa> rates = mpaDbStorage.getAll();
-        assertEquals(3, rates.size());
+        assertEquals(5, rates.size());
     }
 
     @Test
     void shouldGetById() {
         Mpa rate = mpaDbStorage.getById(2);
-        assertEquals("PPG", rate.getName());
+        assertEquals("PG", rate.getName());
     }
 }

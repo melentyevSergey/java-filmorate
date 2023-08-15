@@ -42,7 +42,7 @@ class FilmDbStorageTest {
 
         Film addFilm = filmDbStorage.createFilm(film);
         assertEquals(addFilm.getName(), film.getName());
-        assertEquals("GG", addFilm.getMpa().getName());
+        assertEquals("G", addFilm.getMpa().getName());
         Assertions.assertTrue(addFilm.getGenres().contains(genre));
     }
 
@@ -72,7 +72,7 @@ class FilmDbStorageTest {
         Film updatedFilm = filmDbStorage.updateFilm(changeFilm);
 
         assertEquals(updatedFilm.getName(), changeFilm.getName());
-        assertEquals("PPG", updatedFilm.getMpa().getName());
+        assertEquals("PG", updatedFilm.getMpa().getName());
         Assertions.assertTrue(updatedFilm.getGenres().contains(changeGenre));
     }
 
@@ -93,7 +93,7 @@ class FilmDbStorageTest {
         Film getFilm = filmDbStorage.getFilmById(addFilm.getId());
 
         assertEquals(getFilm.getName(), film.getName());
-        assertEquals("GG", getFilm.getMpa().getName());
+        assertEquals("G", getFilm.getMpa().getName());
         Assertions.assertTrue(getFilm.getGenres().contains(genre));
     }
 

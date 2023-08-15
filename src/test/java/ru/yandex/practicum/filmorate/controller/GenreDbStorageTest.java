@@ -21,12 +21,12 @@ class GenreDbStorageTest {
     @Test
     void shouldGetAll() {
         List<Genre> genres = genreDbStorage.getAll();
-        assertEquals(3, genres.size());
+        assertEquals(6, genres.size());
     }
 
     @Test
     void shouldGetById() {
         Genre testGenre = genreDbStorage.getById(2);
-        assertEquals("Документальный", testGenre.getName());
+        assertEquals("Драма", testGenre.getName());
     }
 }
