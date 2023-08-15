@@ -31,7 +31,7 @@ public interface UserStorage {
      */
     void removeUser(Integer id);
 
-    boolean isUserPresent(Integer receivedUserId);
+    boolean isUserPresent(Integer id);
 
     void addFriend(Integer id, Integer friendId);
 

@@ -7,19 +7,19 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
-@Component
 @Slf4j
+@Component
 public class UserMapper implements RowMapper<User> {
     public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-        log.debug("Mapping data for User");
+        int id = rs.getInt("user_id");
+        String name = rs.getString("name");
+        String email = rs.getString("email");
+        String login= rs.getString("login");
+        LocalDate birthday = rs.getDate("birthday").toLocalDate();
 
-        return User.builder()
-                .id(rs.getInt("user_id"))
-                .name(rs.getString("name"))
-                .email(rs.getString("email"))
-                .login(rs.getString("login"))
-                .birthday(rs.getDate("birthday").toLocalDate())
-                .build();
+        log.debug("Маппинг данных из БД на объект Пользователь завершен. ");
+        return new User(id, name, email, login, birthday);
     }
 }
