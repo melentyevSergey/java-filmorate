@@ -5,7 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.inMemory.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 import ru.yandex.practicum.filmorate.utils.IdValidationException;
 import ru.yandex.practicum.filmorate.utils.NotFoundException;
 import ru.yandex.practicum.filmorate.validators.ValidateFilm;
@@ -14,10 +15,13 @@ import ru.yandex.practicum.filmorate.validators.ValidateFilm;
 @Service
 public class FilmService {
 
-    private final InMemoryFilmStorage filmStorage;
+    private final FilmStorage filmStorage;
 
     @Autowired
-    public FilmService(InMemoryFilmStorage filmStorage) {
+    private UserStorage userStorage;
+
+    @Autowired
+    public FilmService(FilmStorage filmStorage) {
         this.filmStorage = filmStorage;
     }
 
@@ -47,26 +51,16 @@ public class FilmService {
         }
     }
 
-    public Film addLike(int id, int userId) {
-        if (userId <= 0) {
-            throw new NotFoundException("Пользователь не найден.");
-        }
-        if (filmStorage.isFilmPresent(id)) {
-            return filmStorage.addLike(id, userId);
-        } else {
-            throw new IdValidationException("Нет фильма с таким идентификатором.");
-        }
+    public void addLike(int filmId, int userId) {
+        userStorage.isUserPresent(userId);
+        filmStorage.isFilmPresent(filmId);
+        filmStorage.addLike(filmId, userId);
     }
 
-    public Film removeLike(int id, int userId) {
-        if (userId <= 0) {
-            throw new NotFoundException("Пользователь не найден.");
-        }
-        if (filmStorage.isFilmPresent(id)) {
-            return filmStorage.removeLike(id, userId);
-        } else {
-            throw new IdValidationException("Нет фильма с таким идентификатором.");
-        }
+    public void removeLike(int filmId, int userId) {
+        userStorage.isUserPresent(userId);
+        filmStorage.isFilmPresent(filmId);
+        filmStorage.removeLike(filmId, userId);
     }
 
     public List<Film> getPopularByCount(int count) {
@@ -79,5 +73,10 @@ public class FilmService {
         } else {
             throw new NotFoundException("Нет фильма с таким идентификатором.");
         }
+    }
+
+    public void removeFilm(Integer filmId) {
+        filmStorage.isFilmPresent(filmId);
+        filmStorage.removeFilmById(filmId);
     }
 }

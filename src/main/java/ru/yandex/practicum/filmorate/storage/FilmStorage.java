@@ -30,18 +30,16 @@ public interface FilmStorage {
      * @param id - уникальный идентификатор фильма
      * @param userId - уникальный идентификатор пользователя
      *
-     * @return - сущность фильма с обновленным списком лайков
      */
-    Film addLike(int id, int userId);
+    void addLike(int id, int userId);
 
     /**
      * Метод для удаления лайка
      * @param id - уникальный идентификатор фильма
      * @param userId - уникальный идентификатор пользователя
      *
-     * @return - сущность фильма с обновленным списком лайков
      */
-    Film removeLike(int id, int userId);
+    void removeLike(int id, int userId);
 
     /**
      * Метод для получения топ фильмов по количеству лайков
@@ -58,4 +56,8 @@ public interface FilmStorage {
      * @return - сущность фильма
      */
     Film getFilmById(int id);
+
+    void removeFilmById(Integer id);
+
+    boolean isFilmPresent(Integer id);
 }

@@ -5,10 +5,8 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Repository
@@ -19,6 +17,8 @@ public class InMemoryUserStorage implements UserStorage {
 
     /** Поле с таблицей уникальный идентификатор и пользователь */
     private final Map<Integer, User> users = new HashMap<>();
+
+    private final Map<Integer, Set<Integer>> friends = new HashMap<>();
 
     @Override
     public boolean isUserPresent(Integer id) {
@@ -68,67 +68,42 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public void addFriend(Integer id, Integer friendId) {
-        User user = users.get(id);
-        User friend = users.get(friendId);
-
-        user.addFriend(friendId);
-        friend.addFriend(id);
-
-        users.put(id, user);
-        users.put(friendId, friend);
-
-        log.debug("Пользователю {} добавлен друг {}", id, friendId);
-    }
-
-    @Override
-    public void removeFriend(Integer id, Integer removeId) {
-        User user = users.get(id);
-        User friend = users.get(removeId);
-
-        user.removeFriend(removeId);
-        friend.removeFriend(id);
-
-        users.put(id, user);
-        users.put(removeId, friend);
-
-        log.debug("Удален друг {} у пользователя {}", removeId, id);
+    public void addFriend(Integer oneId, Integer twoId) {
+        log.debug("Пользователи с идентификаторами {} и {} стали друзьями", oneId, twoId);
+        friends.get(oneId).add(twoId);
+        friends.get(twoId).add(oneId);
     }
 
     @Override
     public List<User> getFriends(Integer id) {
-        User user = users.get(id);
-        List<User> friends = new ArrayList<>();
-
-        for (int friendId : user.getFriends()) {
-            friends.add(users.get(friendId));
-        }
-
-        log.debug("Будет возвращен список друзей из {} записей", friends.size());
-
-        return friends;
+        log.debug("Текущее колличество друзей у пользователя с идентификатором {}: {}",
+                id, friends.get(id).size());
+        isUserPresent(id);
+        return friends.get(id).stream()
+                .map(users::get)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<User> getCommonFriends(Integer id, Integer otherId) {
-        User user = users.get(id);
-        User otherUser = users.get(otherId);
-
-        List<Integer> userFriends = new ArrayList<>(user.getFriends());
-        List<Integer> common = new ArrayList<>(otherUser.getFriends());
-        common.retainAll(userFriends);
-
-        List<User> commonFriends = new ArrayList<>();
-
-        for (int commonId : common) {
-            commonFriends.add(users.get(commonId));
-        }
-
-        return commonFriends;
+        isUserPresent(id);
+        isUserPresent(otherId);
+        return friends.get(id).stream()
+                .filter(friends.get(otherId)::contains)
+                .map(users::get)
+                .collect(Collectors.toList());
     }
 
     public void resetUserStorage() {
         uid = 0;
         users.clear();
+        friends.clear();
+    }
+
+    @Override
+    public void removeFriend(Integer id, Integer removeId) {
+        log.debug("Пользователи с идентификаторами {} и {} перестали дружить", id, removeId);
+        friends.get(id).remove(removeId);
+        friends.get(removeId).remove(id);
     }
 }

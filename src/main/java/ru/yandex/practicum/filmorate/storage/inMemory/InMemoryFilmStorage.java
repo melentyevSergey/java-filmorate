@@ -6,6 +6,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Repository
@@ -16,6 +17,8 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     /** Поле с таблицей уникальный идентификатор и фильм */
     private final Map<Integer, Film> films = new HashMap<>();
+
+    private final Map<Integer, Set<Integer>> likes = new HashMap<>();
 
     public boolean isFilmPresent(int id) {
         return films.containsKey(id);
@@ -60,34 +63,37 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Film addLike(int id, int userId) {
-        Film film = films.get(id);
-        film.addLike(userId);
-
-        log.debug("Добавлен лайк пользователя {} фильму {}", userId, id);
-
-        return film;
+    public void addLike(int filmId, int userId) {
+        log.debug("Пользователь {} поставил лайк фильму {}", userId, filmId);
+        likes.get(filmId).add(userId);
     }
 
     @Override
-    public Film removeLike(int id, int userId) {
-        Film film = films.get(id);
-        film.removeLike(userId);
-
-        log.debug("Удален лайк пользователя {} у фильма {}", userId, id);
-
-        return film;
+    public void removeLike(int filmId, int userId) {
+        log.debug("Пользователю {} больше не нравится фильм {}", userId, filmId);
+        likes.get(filmId).remove(userId);
     }
 
     @Override
     public List<Film> getPopularByCount(int count) {
-        int filmsCount = films.values().size();
-        int maxCount = Math.min(filmsCount, count);
+        log.debug("Запрос {} самых популярных фильмов", count);
+        return likes.entrySet().stream()
+                .sorted((o1, o2) -> Integer.compare(o2.getValue().size(), o1.getValue().size()))
+                .map(Map.Entry::getKey)
+                .limit(Objects.requireNonNullElse(count, 10))
+                .collect(Collectors.toList()).stream()
+                .mapToInt(number -> number)
+                .mapToObj(films::get)
+                .collect(Collectors.toList());
+    }
 
-        List<Film> result = new ArrayList<>(films.values());
-        Collections.sort(result, Comparator.comparing(Film::getLikesCount));
-        Collections.reverse(result);
+    @Override
+    public void removeFilmById(Integer id) {
 
-        return result.subList(0, maxCount);
+    }
+
+    @Override
+    public boolean isFilmPresent(Integer id) {
+        return false;
     }
 }
