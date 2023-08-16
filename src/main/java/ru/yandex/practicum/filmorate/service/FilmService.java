@@ -9,7 +9,6 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 import ru.yandex.practicum.filmorate.utils.FilmNotFoundException;
-import ru.yandex.practicum.filmorate.utils.IdValidationException;
 import ru.yandex.practicum.filmorate.validators.ValidateFilm;
 
 @Slf4j
