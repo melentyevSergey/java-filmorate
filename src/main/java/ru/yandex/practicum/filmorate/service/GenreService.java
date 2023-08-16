@@ -12,13 +12,24 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class GenreService {
+
+    /** Поле слоя хранения жанров */
     private final GenreStorage genreStorage;
 
+    /**
+     * Метод получения всех жанров
+     * @return лист жанров
+     */
     public List<Genre> getAll() {
         return genreStorage.getAll();
     }
 
-    public Genre getById(Integer genreId) {
-        return genreStorage.getById(genreId);
+    /**
+     * Метод получения жанра по уникальному идентификатору
+     * @param id - уникальный идентификатор жанра
+     * @return сущность жанра
+     */
+    public Genre getById(Integer id) {
+        return genreStorage.getById(id);
     }
 }

@@ -12,13 +12,24 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class MpaService {
+
+    /** Поле слоя хранения MPA */
     private final MpaStorage mpaStorage;
 
+    /**
+     * Метод получения всех MPA
+     * @return лист MPA
+     */
     public List<Mpa> getAll() {
         return mpaStorage.getAll();
     }
 
-    public Mpa getById(Integer mpaId) {
-        return mpaStorage.getById(mpaId);
+    /**
+     * Метод получения MPA по уникальному идентификатору
+     * @param id - уникальный идентификатор жанра
+     * @return сущность MPA
+     */
+    public Mpa getById(Integer id) {
+        return mpaStorage.getById(id);
     }
 }

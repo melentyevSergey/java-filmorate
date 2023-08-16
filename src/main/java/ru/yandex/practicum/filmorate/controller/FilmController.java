@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -14,17 +14,15 @@ import java.util.List;
 @Slf4j
 @RestController
 @Validated
+@RequiredArgsConstructor
 public class FilmController {
-    private final FilmService filmService;
 
-    @Autowired
-    public FilmController(FilmService filmService) {
-        this.filmService = filmService;
-    }
+    /** Поле сервисного слоя фильмотеки */
+    private final FilmService filmService;
 
     @GetMapping("/films")
     public List<Film> findAll() {
-        log.debug("Получен запрос всех фильмов");
+        log.debug("Получен запрос на получение всех фильмов.");
         return filmService.getFilms();
     }
 
@@ -36,31 +34,31 @@ public class FilmController {
 
     @PutMapping(value = "/films")
     public Film changeFilm(@Valid @RequestBody Film film) {
-        log.debug("Получен запрос на добавление фильма {}.", film.getName());
+        log.debug("Получен запрос на обновление фильма {}.", film.getName());
         return filmService.updateFilm(film);
     }
 
     @GetMapping("/films/{filmId}")
     public Film getFilmById(@PathVariable int filmId) {
-        log.debug("Получен запрос фильма по номеру");
+        log.debug("Получен запрос на получение фильма по идентификатору {}.", filmId);
         return filmService.getFilmById(filmId);
     }
 
     @DeleteMapping("/films/{filmId}")
     public void removeFilmById(@PathVariable int filmId) {
-        log.debug("Получен запрос на удаление фильма номер {}", filmId);
+        log.debug("Получен запрос на удаление фильма по идентификатору {}.", filmId);
         filmService.removeFilm(filmId);
     }
 
     @PutMapping("/films/{filmId}/like/{userId}")
     public void addLike(@PathVariable int filmId, @PathVariable int userId) {
-        log.debug("Получен запрос на добавления лайка фильму {} пользователем {}", filmId, userId);
+        log.debug("Получен запрос на добавления лайка фильма {} пользователем {}.", filmId, userId);
         filmService.addLike(filmId, userId);
     }
 
     @DeleteMapping("/films/{filmId}/like/{userId}")
     public void removeLike(@PathVariable int filmId, @PathVariable int userId) {
-        log.debug("Получен запрос на удаление фильма");
+        log.debug("Получен запрос на удаление лайка пользователя {} у фильма {}.", userId, filmId);
         filmService.removeLike(filmId, userId);
     }
 
@@ -68,9 +66,8 @@ public class FilmController {
     public List<Film> getPopularFilms(
             @RequestParam(defaultValue = "10")
             @Min(value = 1, message = "В запросе задано отрицательное или равное нолю колличество фильмов")
-
             Integer count) {
-        log.debug("Получен запрос топ-{} популярных фильмов", count);
+        log.debug("Получен запрос на получение топ-{} популярных фильмов.", count);
         return filmService.getPopularByCount(count);
     }
 }

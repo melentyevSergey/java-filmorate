@@ -9,9 +9,10 @@ import javax.validation.constraints.NotBlank;
 @Builder
 public class Genre {
 
+    /** Поле с уникальным идентификатором жанра */
     private int id;
 
+    /** Поле с названием жанра */
     @NotBlank(message = "Пустое название не допустимо")
-
     private String name;
 }

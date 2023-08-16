@@ -47,4 +47,10 @@ public class ErrorHandler {
     public String GenreNotFoundException(GenreNotFoundException exception) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(exception.getMessage());
     }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(FilmNotFoundException.class)
+    public String FilmNotFoundException(FilmNotFoundException exception) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(exception.getMessage());
+    }
 }

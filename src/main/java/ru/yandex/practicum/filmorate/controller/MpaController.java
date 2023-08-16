@@ -16,6 +16,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class MpaController {
+
+    /** Поле сервисного слоя MPA */
     private final MpaService mpaService;
 
     @GetMapping

@@ -22,7 +22,11 @@ import java.util.List;
 @Repository
 @AllArgsConstructor
 public class UserDbStorage implements UserStorage {
+
+    /** Поле с экземпляром сущности для обвязки над JDBC */
     private final JdbcTemplate jdbcTemplate;
+
+    /** Поле с экземпляром сущности маппера строки на класс User */
     private final UserMapper userMapper;
 
     @Override

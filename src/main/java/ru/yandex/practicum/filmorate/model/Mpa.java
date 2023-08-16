@@ -9,9 +9,10 @@ import javax.validation.constraints.NotBlank;
 @Builder
 public class Mpa {
 
+    /** Поле с уникальным идентификатором MPA */
     private int id;
 
-    @NotBlank(message = "Пустое название не допустимо")
-
+    /** Поле с названием MPA */
+    @NotBlank(message = "Пустое название не допустимо.")
     private String name;
 }

@@ -5,6 +5,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import java.util.List;
 
 public interface FilmStorage {
+
     /**
      * Метод для получения всех фильмов
      * @return - список всех фильмов
@@ -52,12 +53,20 @@ public interface FilmStorage {
     /**
      * Метод для получения фильма по идентификатору
      * @param id - уникальный идентификатор фильма
-     *
      * @return - сущность фильма
      */
     Film getFilmById(int id);
 
+    /**
+     * Метод для удаления фильма по идентификатору
+     * @param id - уникальный идентификатор фильма
+     */
     void removeFilmById(Integer id);
 
+    /**
+     * Метод для проверки существования фильма по идентификатору
+     * @param id - уникальный идентификатор фильма
+     * @return - булиевое значение наличия фильма
+     */
     boolean isFilmPresent(Integer id);
 }

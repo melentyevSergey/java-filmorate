@@ -12,7 +12,8 @@ import java.sql.SQLException;
 @Slf4j
 public class MpaMapper implements RowMapper<Mpa> {
     public Mpa mapRow(ResultSet rs, int rowNum) throws SQLException {
-        log.debug("Мапперуем строку в обьект MPA");
+        log.debug("Сборка обьекта Mpa по прочитанной из базы записи.");
+
         return Mpa.builder()
                 .id(rs.getInt("mpa_id"))
                 .name(rs.getString("mpa_name"))

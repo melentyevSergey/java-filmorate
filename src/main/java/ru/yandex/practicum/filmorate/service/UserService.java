@@ -15,12 +15,22 @@ import java.util.List;
 @AllArgsConstructor
 public class UserService {
 
+    /** Поле слоя хранения пользователей */
     private final UserStorage userStorage;
 
+    /**
+     * Метод получения всех пользователей
+     * @return лист всех пользователей
+     */
     public List<User> getUsers() {
         return userStorage.getUsers();
     }
 
+    /**
+     * Метод создания нового пользователя
+     * @param user - сущность нового пользователя
+     * @return вновь созданный пользователь
+     */
     public User createUser(User user) {
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());

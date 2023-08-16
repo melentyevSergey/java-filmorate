@@ -18,8 +18,14 @@ public class InMemoryFilmStorage implements FilmStorage {
     /** Поле с таблицей уникальный идентификатор и фильм */
     private final Map<Integer, Film> films = new HashMap<>();
 
+    /** Поле с таблицей лайков */
     private final Map<Integer, Set<Integer>> likes = new HashMap<>();
 
+    /**
+     * Метод для проверки существования фильма по уникальному идентификатору
+     * @param id - уникальный идентификатор фильма
+     * @return - булиевое значение наличия фильма
+     */
     public boolean isFilmPresent(int id) {
         return films.containsKey(id);
     }

@@ -18,7 +18,11 @@ import java.util.List;
 @Repository
 @AllArgsConstructor
 public class MpaDbStorage implements MpaStorage {
+
+    /** Поле с экземпляром сущности для обвязки над JDBC */
     private final JdbcTemplate jdbcTemplate;
+
+    /** Поле с экземпляром сущности маппера строки на класс Mpa */
     private final MpaMapper mpaMapper;
 
     @Override

@@ -18,7 +18,11 @@ import java.util.List;
 @Repository
 @AllArgsConstructor
 public class GenreDbStorage implements GenreStorage {
+
+    /** Поле с экземпляром сущности для обвязки над JDBC */
     private final JdbcTemplate jdbcTemplate;
+
+    /** Поле с экземпляром сущности маппера строки на класс Genre */
     private final GenreMapper genreMapper;
 
     @Override

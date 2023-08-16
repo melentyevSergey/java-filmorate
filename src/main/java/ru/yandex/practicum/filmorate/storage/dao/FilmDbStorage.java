@@ -14,7 +14,6 @@ import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.mappers.FilmMapper;
 import ru.yandex.practicum.filmorate.utils.FilmNotFoundException;
-import ru.yandex.practicum.filmorate.utils.UserNotFoundException;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -27,22 +26,30 @@ import java.util.*;
 @AllArgsConstructor
 public class FilmDbStorage implements FilmStorage {
 
+    /** Поле с экземпляром сущности для обвязки над JDBC */
     private final JdbcTemplate jdbcTemplate;
+
+    /** Поле с экземпляром сущности маппера строки на класс Film */
     private final FilmMapper filmMapper;
 
     @Override
     public List<Film> getFilms() {
+        log.debug("Получение лиска фильмов из базы.");
+
         String sqlQuery = "SELECT f.*, g.genre_id, g.genre_name, m.mpa_id, m.mpa_name " +
                 "FROM films AS f " +
                 "LEFT JOIN film_genre AS f_g ON f.film_id = f_g.film_id " +
                 "LEFT JOIN genre AS g ON f_g.genre_id = g.genre_id " +
                 "LEFT JOIN film_mpa AS f_m ON f.film_id = f_m.film_id " +
                 "LEFT JOIN mpa AS m ON f_m.mpa_id = m.mpa_id";
+
         return outputtingListFilm(sqlQuery);
     }
 
     @Override
     public Film getFilmById(int id) {
+        log.debug("Получения фильма под идентификатором {} из БД.", id);
+
         String sqlQuery = "SELECT f.*, g.genre_id, g.genre_name, m.mpa_id, m.mpa_name " +
                 "FROM films AS f " +
                 "LEFT JOIN film_genre AS f_g ON f.film_id = f_g.film_id " +
@@ -55,11 +62,16 @@ public class FilmDbStorage implements FilmStorage {
         if (!films.isEmpty()) {
             return films.get(0);
         } else {
-            log.debug("Фильм с номером {} не найден", id);
-            throw new FilmNotFoundException(String.format("Фильм с номером %s не найден", id));
+            log.debug("Фильм с идентификатором {} не найден", id);
+            throw new FilmNotFoundException(String.format("Фильм с идентификатором %s не найден", id));
         }
     }
 
+    /**
+     * Метод получения фильма по идентификатору
+     * @param sqlQuery - запрос в базу
+     * @return лист фильмов
+     */
     private List<Film> outputtingListFilm(String sqlQuery) {
         Map<Integer, Film> films = new HashMap<>();
         jdbcTemplate.query(sqlQuery, rs -> {
@@ -87,6 +99,8 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Film createFilm(Film film) {
+        log.debug("Создание фильма");
+
         String sqlQuery = "INSERT INTO films (name, description, release_date, duration) " +
                 "VALUES(?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -198,7 +212,7 @@ public class FilmDbStorage implements FilmStorage {
         String query = "SELECT COUNT (*) FROM films WHERE film_id = ?";
         if (jdbcTemplate.queryForObject(query, Integer.class, id) == 0) {
             log.debug(String.format("Фильм с номером %s не найден", id));
-            throw new UserNotFoundException(String.format("Фильм с номером %s не найден", id));
+            throw new FilmNotFoundException(String.format("Фильм с номером %s не найден", id));
         }
         return true;
     }

@@ -16,6 +16,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/genres")
 public class GenreController {
+
+    /** Поле сервисного слоя жанров */
     private final GenreService genreService;
 
     @GetMapping

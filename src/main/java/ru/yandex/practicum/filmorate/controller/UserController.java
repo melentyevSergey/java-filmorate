@@ -14,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
 
+    /** Поле сервисного слоя пользователей */
     private final UserService service;
 
     @GetMapping("/users")

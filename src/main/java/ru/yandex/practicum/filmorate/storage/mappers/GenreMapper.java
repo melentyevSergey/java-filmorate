@@ -12,7 +12,8 @@ import java.sql.SQLException;
 @Slf4j
 public class GenreMapper implements RowMapper<Genre> {
     public Genre mapRow(ResultSet rs, int rowNum) throws SQLException {
-        log.debug("Мапперуем строку в обьект Genre");
+        log.debug("Сборка обьекта Genre по прочитанной из базы записи.");
+
         return Genre.builder()
                 .id(rs.getInt("genre_id"))
                 .name(rs.getString("genre_name"))
