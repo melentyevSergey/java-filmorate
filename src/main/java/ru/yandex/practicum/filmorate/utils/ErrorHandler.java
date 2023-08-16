@@ -32,25 +32,25 @@ public class ErrorHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(UserNotFoundException.class)
-    public String UserNotFoundException(UserNotFoundException exception) throws JsonProcessingException {
+    public String userNotFoundException(UserNotFoundException exception) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(exception.getMessage());
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(MpaNotFoundException.class)
-    public String MpaNotFoundException(MpaNotFoundException exception) throws JsonProcessingException {
+    public String mpaNotFoundException(MpaNotFoundException exception) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(exception.getMessage());
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(GenreNotFoundException.class)
-    public String GenreNotFoundException(GenreNotFoundException exception) throws JsonProcessingException {
+    public String genreNotFoundException(GenreNotFoundException exception) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(exception.getMessage());
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(FilmNotFoundException.class)
-    public String FilmNotFoundException(FilmNotFoundException exception) throws JsonProcessingException {
+    public String filmNotFoundException(FilmNotFoundException exception) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(exception.getMessage());
     }
 }
