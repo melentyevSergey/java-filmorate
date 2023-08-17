@@ -1,83 +1,112 @@
 package ru.yandex.practicum.filmorate.service;
 
 import java.util.List;
+
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.utils.IdValidationException;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 import ru.yandex.practicum.filmorate.utils.NotFoundException;
 import ru.yandex.practicum.filmorate.validators.ValidateFilm;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class FilmService {
 
-    private final InMemoryFilmStorage filmStorage;
+    /** Поле слоя хранения фильмотеки */
+    private final FilmStorage filmStorage;
 
-    @Autowired
-    public FilmService(InMemoryFilmStorage filmStorage) {
-        this.filmStorage = filmStorage;
-    }
+    /** Поле слоя хранения пользователей */
+    private final UserStorage userStorage;
 
+    /**
+     * Метод получения всех фильмов
+     * @return возвращает лист всех фильмов
+     */
     public List<Film> getFilms() {
         return filmStorage.getFilms();
     }
 
+    /**
+     * Метод создания нового фильма
+     * @param film - сущность нового фильма
+     * @return возвращает вновь созданный фильм
+     */
     public Film createNewFilm(Film film) {
         ValidateFilm.validate(film);
-
-        log.debug("Валидация фильма при создании завершена успешно.");
-
         return filmStorage.createFilm(film);
     }
 
+    /**
+     * Метод обновления фильма
+     * @param film - сущность обновляемого фильма
+     * @return возвращает обновленный фильм
+     */
     public Film updateFilm(Film film) {
-        final int receivedFilmId = film.getId();
+        int id = film.getId();
 
-        if (filmStorage.isFilmPresent(receivedFilmId)) {
-            ValidateFilm.validate(film);
+        if (!filmStorage.isFilmPresent(id)) {
+            throw new NotFoundException(String.format("Фильм с идентификатором %s не найден", id));
+        }
 
-            log.debug("Валидация фильма при обновлении завершена успешно.");
+        ValidateFilm.validate(film);
+        return filmStorage.updateFilm(film);
+    }
 
-            return filmStorage.updateFilm(film);
-        } else {
-            throw new IdValidationException("Нет фильма с таким идентификатором.");
+    /**
+     * Метод добавления лайка фильму
+     * @param filmId - идентификатор фильма
+     * @param userId - идентификатор пользователя
+     */
+    public void addLike(int filmId, int userId) {
+        if (userStorage.isUserPresent(userId) && filmStorage.isFilmPresent(filmId)) {
+            filmStorage.addLike(filmId, userId);
         }
     }
 
-    public Film addLike(int id, int userId) {
-        if (userId <= 0) {
-            throw new NotFoundException("Пользователь не найден.");
-        }
-        if (filmStorage.isFilmPresent(id)) {
-            return filmStorage.addLike(id, userId);
-        } else {
-            throw new IdValidationException("Нет фильма с таким идентификатором.");
-        }
-    }
-
-    public Film removeLike(int id, int userId) {
-        if (userId <= 0) {
-            throw new NotFoundException("Пользователь не найден.");
-        }
-        if (filmStorage.isFilmPresent(id)) {
-            return filmStorage.removeLike(id, userId);
-        } else {
-            throw new IdValidationException("Нет фильма с таким идентификатором.");
+    /**
+     * Метод удаления лайка у фильма
+     * @param filmId - идентификатор фильма
+     * @param userId - идентификатор пользователя
+     */
+    public void removeLike(int filmId, int userId) {
+        if (userStorage.isUserPresent(userId) && filmStorage.isFilmPresent(filmId)) {
+            filmStorage.removeLike(filmId, userId);
         }
     }
 
+    /**
+     * Метод получения листа популярных фильмов
+     * @param count - количество фильмов в листе
+     * @return лист фильмов
+     */
     public List<Film> getPopularByCount(int count) {
         return filmStorage.getPopularByCount(count);
     }
 
+    /**
+     * Метод получения фильма по идентификатору
+     * @param id - идентификатор фильма
+     * @return сущьность фильма
+     */
     public Film getFilmById(int id) {
         if (filmStorage.isFilmPresent(id)) {
             return filmStorage.getFilmById(id);
         } else {
-            throw new NotFoundException("Нет фильма с таким идентификатором.");
+            throw new NotFoundException(String.format("Фильм с идентификатором %s не найден", id));
+        }
+    }
+
+    /**
+     * Метод удаления фильма по идентификатору
+     * @param id - идентификатор фильма
+     */
+    public void removeFilm(Integer id) {
+        if (filmStorage.isFilmPresent(id)) {
+            filmStorage.removeFilmById(id);
         }
     }
 }

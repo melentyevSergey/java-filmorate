@@ -15,18 +15,21 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ValidationException.class)
     public String validationException(ValidationException exception) throws JsonProcessingException {
+        log.debug("Получен статус 400 BAD_REQUEST {}", exception.getMessage(), exception);
         return new ObjectMapper().writeValueAsString(exception.getMessage());
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundException.class)
     public String notFoundException(NotFoundException exception) throws JsonProcessingException {
+        log.debug("Получен статус 404 NOT_FOUND {}", exception.getMessage(), exception);
         return new ObjectMapper().writeValueAsString(exception.getMessage());
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(IdValidationException.class)
     public String idValidationException(IdValidationException exception) throws JsonProcessingException {
+        log.debug("Получен статус 500 INTERNAL_SERVER_ERROR {}", exception.getMessage(), exception);
         return new ObjectMapper().writeValueAsString(exception.getMessage());
     }
 }

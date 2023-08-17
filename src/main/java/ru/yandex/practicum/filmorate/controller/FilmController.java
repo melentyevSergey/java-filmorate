@@ -2,76 +2,72 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
-import java.util.*;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import java.util.List;
 
 @Slf4j
 @RestController
+@Validated
 @RequiredArgsConstructor
 public class FilmController {
 
-    @Autowired
-    private final FilmService service;
+    /** Поле сервисного слоя фильмотеки */
+    private final FilmService filmService;
 
-    @ResponseBody
     @GetMapping("/films")
-    public List<Film> getFilms() {
-        log.info("Получен запрос GET на получение списка всех фильмов.");
-
-        return service.getFilms();
+    public List<Film> findAll() {
+        log.debug("Получен запрос на получение всех фильмов.");
+        return filmService.getFilms();
     }
 
-    @ResponseBody
-    @GetMapping("/films/{id}")
-    public Film getFilmById(@PathVariable int id) {
-        log.info("Получен запрос GET для получения фильма по идентификатору {}", id);
-
-        return service.getFilmById(id);
+    @PostMapping(value = "/films")
+    public Film addFilm(@Valid @RequestBody Film film) {
+        log.debug("Получен запрос на добавление фильма {}.", film.getName());
+        return filmService.createNewFilm(film);
     }
 
-    @ResponseBody
-    @PostMapping("/films")
-    public Film create(@RequestBody Film film) {
-        log.info("Получен запрос POST для создания нового фильма.");
-
-        return service.createNewFilm(film);
+    @PutMapping(value = "/films")
+    public Film changeFilm(@Valid @RequestBody Film film) {
+        log.debug("Получен запрос на обновление фильма {}.", film.getName());
+        return filmService.updateFilm(film);
     }
 
-    @ResponseBody
-    @PutMapping("/films")
-    public Film update(@RequestBody Film film) {
-        log.info("Получен запрос PUT для обновления существующего фильма.");
-
-        return service.updateFilm(film);
+    @GetMapping("/films/{filmId}")
+    public Film getFilmById(@PathVariable int filmId) {
+        log.debug("Получен запрос на получение фильма по идентификатору {}.", filmId);
+        return filmService.getFilmById(filmId);
     }
 
-    @ResponseBody
-    @PutMapping("/films/{id}/like/{userId}")
-    public Film addUserLike(@PathVariable int id, @PathVariable int userId) {
-        log.info("Получен запрос PUT для добавления лайка фильму {} пользователем {}", id, userId);
-
-        return service.addLike(id, userId);
+    @DeleteMapping("/films/{filmId}")
+    public void removeFilmById(@PathVariable int filmId) {
+        log.debug("Получен запрос на удаление фильма по идентификатору {}.", filmId);
+        filmService.removeFilm(filmId);
     }
 
-    @ResponseBody
-    @DeleteMapping("/films/{id}/like/{userId}")
-    public Film deleteUserLike(@PathVariable int id, @PathVariable int userId) {
-        log.info("Получен запрос DELETE для удаления лайка " +
-                "пользователя {} под фильмом {}", userId, id);
-
-        return service.removeLike(id, userId);
+    @PutMapping("/films/{filmId}/like/{userId}")
+    public void addLike(@PathVariable int filmId, @PathVariable int userId) {
+        log.debug("Получен запрос на добавления лайка фильма {} пользователем {}.", filmId, userId);
+        filmService.addLike(filmId, userId);
     }
 
-    @ResponseBody
+    @DeleteMapping("/films/{filmId}/like/{userId}")
+    public void removeLike(@PathVariable int filmId, @PathVariable int userId) {
+        log.debug("Получен запрос на удаление лайка пользователя {} у фильма {}.", userId, filmId);
+        filmService.removeLike(filmId, userId);
+    }
+
     @GetMapping("/films/popular")
-    public List<Film> getPopularByCount(@RequestParam(defaultValue = "10") int count) {
-        log.info("Получен запрос GET для возврата списка из первых {} фильмов " +
-                "по количеству лайков", count);
-
-        return service.getPopularByCount(count);
+    public List<Film> getPopularFilms(
+            @RequestParam(defaultValue = "10")
+            @Min(value = 1, message = "В запросе задано отрицательное или равное нолю колличество фильмов")
+            Integer count) {
+        log.debug("Получен запрос на получение топ-{} популярных фильмов.", count);
+        return filmService.getPopularByCount(count);
     }
 }

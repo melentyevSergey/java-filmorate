@@ -29,17 +29,17 @@ public interface UserStorage {
      * Метод для удаления пользователя
      * @param id - уникальный идентификатор удаляемого пользователя
      */
-    void removeUser(int id);
+    void removeUser(Integer id);
 
-    boolean isUserPresent(int receivedUserId);
+    boolean isUserPresent(Integer id);
 
-    void addFriend(int id, int friendId);
+    void addFriend(Integer id, Integer friendId);
 
-    void removeFriend(int id, int removeId);
+    void removeFriend(Integer id, Integer removeId);
 
-    List<User> getFriends(int id);
+    List<User> getFriends(Integer id);
 
-    User getUserById(int id);
+    User getUserById(Integer id);
 
-    List<User> getCommonFriends(int id, int otherId);
+    List<User> getCommonFriends(Integer id, Integer otherId);
 }

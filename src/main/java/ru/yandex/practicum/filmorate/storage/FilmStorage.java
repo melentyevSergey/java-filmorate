@@ -5,6 +5,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import java.util.List;
 
 public interface FilmStorage {
+
     /**
      * Метод для получения всех фильмов
      * @return - список всех фильмов
@@ -30,18 +31,16 @@ public interface FilmStorage {
      * @param id - уникальный идентификатор фильма
      * @param userId - уникальный идентификатор пользователя
      *
-     * @return - сущность фильма с обновленным списком лайков
      */
-    Film addLike(int id, int userId);
+    void addLike(int id, int userId);
 
     /**
      * Метод для удаления лайка
      * @param id - уникальный идентификатор фильма
      * @param userId - уникальный идентификатор пользователя
      *
-     * @return - сущность фильма с обновленным списком лайков
      */
-    Film removeLike(int id, int userId);
+    void removeLike(int id, int userId);
 
     /**
      * Метод для получения топ фильмов по количеству лайков
@@ -54,8 +53,20 @@ public interface FilmStorage {
     /**
      * Метод для получения фильма по идентификатору
      * @param id - уникальный идентификатор фильма
-     *
      * @return - сущность фильма
      */
     Film getFilmById(int id);
+
+    /**
+     * Метод для удаления фильма по идентификатору
+     * @param id - уникальный идентификатор фильма
+     */
+    void removeFilmById(Integer id);
+
+    /**
+     * Метод для проверки существования фильма по идентификатору
+     * @param id - уникальный идентификатор фильма
+     * @return - булиевое значение наличия фильма
+     */
+    boolean isFilmPresent(Integer id);
 }
