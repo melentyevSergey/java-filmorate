@@ -11,6 +11,7 @@ import java.sql.SQLException;
 @Component
 @Slf4j
 public class MpaMapper implements RowMapper<Mpa> {
+    @Override
     public Mpa mapRow(ResultSet rs, int rowNum) throws SQLException {
         log.debug("Сборка обьекта Mpa по прочитанной из базы записи.");
 

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
-import ru.yandex.practicum.filmorate.utils.FilmNotFoundException;
+import ru.yandex.practicum.filmorate.utils.NotFoundException;
 import ru.yandex.practicum.filmorate.validators.ValidateFilm;
 
 @Slf4j
@@ -46,8 +46,10 @@ public class FilmService {
      * @return возвращает обновленный фильм
      */
     public Film updateFilm(Film film) {
-        if (!filmStorage.isFilmPresent(film.getId())) {
-            throw new FilmNotFoundException("Нет фильма с таким идентификатором.");
+        int id = film.getId();
+
+        if (!filmStorage.isFilmPresent(id)) {
+            throw new NotFoundException(String.format("Фильм с идентификатором %s не найден", id));
         }
 
         ValidateFilm.validate(film);
@@ -94,7 +96,7 @@ public class FilmService {
         if (filmStorage.isFilmPresent(id)) {
             return filmStorage.getFilmById(id);
         } else {
-            throw new FilmNotFoundException("Нет фильма с таким идентификатором.");
+            throw new NotFoundException(String.format("Фильм с идентификатором %s не найден", id));
         }
     }
 

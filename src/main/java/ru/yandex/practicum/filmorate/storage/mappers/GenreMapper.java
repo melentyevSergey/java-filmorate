@@ -11,6 +11,7 @@ import java.sql.SQLException;
 @Component
 @Slf4j
 public class GenreMapper implements RowMapper<Genre> {
+    @Override
     public Genre mapRow(ResultSet rs, int rowNum) throws SQLException {
         log.debug("Сборка обьекта Genre по прочитанной из базы записи.");
 

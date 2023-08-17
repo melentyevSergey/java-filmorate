@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 import ru.yandex.practicum.filmorate.storage.mappers.UserMapper;
-import ru.yandex.practicum.filmorate.utils.UserNotFoundException;
+import ru.yandex.practicum.filmorate.utils.NotFoundException;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -89,8 +89,7 @@ public class UserDbStorage implements UserStorage {
     public boolean isUserPresent(Integer id) {
         String sql = "SELECT COUNT (*) FROM users WHERE user_id = ?";
         if (jdbcTemplate.queryForObject(sql, Integer.class, id) == 0) {
-            log.debug(String.format("Пользователь с идентификатором %s не найден", id));
-            throw new UserNotFoundException(String.format("Пользователь с идентификатором %s не найден", id));
+            throw new NotFoundException(String.format("Пользователь с идентификатором %s не найден", id));
         }
         return true;
     }

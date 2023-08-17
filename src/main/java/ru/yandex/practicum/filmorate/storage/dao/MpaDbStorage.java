@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.storage.MpaStorage;
 import ru.yandex.practicum.filmorate.storage.mappers.MpaMapper;
-import ru.yandex.practicum.filmorate.utils.MpaNotFoundException;
+import ru.yandex.practicum.filmorate.utils.NotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,8 +45,8 @@ public class MpaDbStorage implements MpaStorage {
     public boolean isMpaPresent(Integer id) {
         String query = "SELECT COUNT (*) FROM MPA WHERE mpa_id = ?";
         if (jdbcTemplate.queryForObject(query, Integer.class, id) == 0) {
-            log.debug(String.format("Возратное ограничение с номером %s не найдено", id));
-            throw new MpaNotFoundException(String.format("Возратное ограничение с номером %s не найдено", id));
+            throw new NotFoundException(String.format("Ограничение по возрасту " +
+                    "с идентификатором %s не найдено", id));
         }
         return true;
     }

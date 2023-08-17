@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.mappers.GenreMapper;
-import ru.yandex.practicum.filmorate.utils.GenreNotFoundException;
+import ru.yandex.practicum.filmorate.utils.NotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +46,7 @@ public class GenreDbStorage implements GenreStorage {
         String query = "SELECT COUNT (*) FROM genre WHERE genre_id = ?";
         if (jdbcTemplate.queryForObject(query, Integer.class, id) == 0) {
             log.debug(String.format("Жанр фильма под номером %s не найден", id));
-            throw new GenreNotFoundException(String.format("Жанр фильма под номером %s не найден", id));
+            throw new NotFoundException(String.format("Жанр фильма под номером %s не найден", id));
         }
         return true;
     }

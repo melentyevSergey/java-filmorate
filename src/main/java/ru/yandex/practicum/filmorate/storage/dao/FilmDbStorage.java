@@ -13,7 +13,7 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.mappers.FilmMapper;
-import ru.yandex.practicum.filmorate.utils.FilmNotFoundException;
+import ru.yandex.practicum.filmorate.utils.NotFoundException;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -62,8 +62,7 @@ public class FilmDbStorage implements FilmStorage {
         if (!films.isEmpty()) {
             return films.get(0);
         } else {
-            log.debug("Фильм с идентификатором {} не найден", id);
-            throw new FilmNotFoundException(String.format("Фильм с идентификатором %s не найден", id));
+            throw new NotFoundException(String.format("Фильм с идентификатором %s не найден", id));
         }
     }
 
@@ -211,8 +210,7 @@ public class FilmDbStorage implements FilmStorage {
     public boolean isFilmPresent(Integer id) {
         String query = "SELECT COUNT (*) FROM films WHERE film_id = ?";
         if (jdbcTemplate.queryForObject(query, Integer.class, id) == 0) {
-            log.debug(String.format("Фильм с номером %s не найден", id));
-            throw new FilmNotFoundException(String.format("Фильм с номером %s не найден", id));
+            throw new NotFoundException(String.format("Фильм с идентификатором %s не найден", id));
         }
         return true;
     }
